@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Download, RotateCcw } from "lucide-react"
 
-const tarotCards = [
+interface TarotCard {
+  name: string
+  interpretation: string
+}
+
+const tarotCards: TarotCard[] = [
   { name: "The Witch", interpretation: "A powerful force is guiding your path." },
   { name: "The Full Moon", interpretation: "Hidden truths will soon come to light." },
   { name: "The Specter", interpretation: "The past is haunting you, but redemption is possible." },
@@ -15,39 +20,41 @@ const tarotCards = [
 ]
 
 export function SpookyTarotReader() {
-  const [selectedCard, setSelectedCard] = useState(null)
+  const [selectedCard, setSelectedCard] = useState<TarotCard | null>(null)
   const [isFlipped, setIsFlipped] = useState(false)
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (selectedCard) {
+    if (selectedCard && canvasRef.current) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext("2d")
-      const img = new Image()
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        ctx.font = "20px Arial"
-        ctx.fillStyle = "white"
-        ctx.textAlign = "center"
-        ctx.fillText(selectedCard.name, canvas.width / 2, 30)
-        ctx.font = "16px Arial"
-        const words = selectedCard.interpretation.split(" ")
-        let line = ""
-        let y = canvas.height - 60
-        words.forEach(word => {
-          const testLine = line + word + " "
-          const metrics = ctx.measureText(testLine)
-          if (metrics.width > canvas.width - 20) {
-            ctx.fillText(line, canvas.width / 2, y)
-            line = word + " "
-            y += 20
-          } else {
-            line = testLine
-          }
-        })
-        ctx.fillText(line, canvas.width / 2, y)
+      if (ctx) {
+        const img = new Image()
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+          ctx.font = "20px Arial"
+          ctx.fillStyle = "white"
+          ctx.textAlign = "center"
+          ctx.fillText(selectedCard.name, canvas.width / 2, 30)
+          ctx.font = "16px Arial"
+          const words = selectedCard.interpretation.split(" ")
+          let line = ""
+          let y = canvas.height - 60
+          words.forEach((word) => {
+            const testLine = line + word + " "
+            const metrics = ctx.measureText(testLine)
+            if (metrics.width > canvas.width - 20) {
+              ctx.fillText(line, canvas.width / 2, y)
+              line = word + " "
+              y += 20
+            } else {
+              line = testLine
+            }
+          })
+          ctx.fillText(line, canvas.width / 2, y)
+        }
+        img.src = `/placeholder.svg?height=300&width=200`
       }
-      img.src = `/placeholder.svg?height=300&width=200`
     }
   }, [selectedCard])
 
@@ -63,11 +70,13 @@ export function SpookyTarotReader() {
   }
 
   const downloadReading = () => {
-    const canvas = canvasRef.current
-    const link = document.createElement("a")
-    link.download = "tarot-reading.png"
-    link.href = canvas.toDataURL()
-    link.click()
+    if (canvasRef.current) {
+      const canvas = canvasRef.current
+      const link = document.createElement("a")
+      link.download = "tarot-reading.png"
+      link.href = canvas.toDataURL()
+      link.click()
+    }
   }
 
   return (

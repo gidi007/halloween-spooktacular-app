@@ -8,17 +8,24 @@ import { SpookyTarotReader } from "./spooky-tarot-reader"
 import { GhostStoriesArchive } from "./Ghost-Stories-Archive"
 import { ParanormalInvestigator } from "./Paranormal-Investigator"
 import { CurseGenerator } from "./Curse-Generator"
-import { Ghost, Cards, Radar, Skull } from "lucide-react"
+import { Ghost, Layers, Radar, Skull } from "lucide-react"
 
-export function HalloweenSpooktacularComponent() {
-  const [activeFeature, setActiveFeature] = useState(null)
+interface Feature {
+  id: string
+  name: string
+  icon: React.ElementType
+  component: React.ComponentType
+}
 
-  const features = [
-    { id: "tarot", name: "Spooky Tarot", icon: Cards, component: SpookyTarotReader },
-    { id: "stories", name: "Ghost Stories", icon: Ghost, component: GhostStoriesArchive },
-    { id: "investigator", name: "Paranormal Investigator", icon: Radar, component: ParanormalInvestigator },
-    { id: "curse", name: "Curse Generator", icon: Skull, component: CurseGenerator },
-  ]
+const features: Feature[] = [
+  { id: "tarot", name: "Spooky Tarot", icon: Layers, component: SpookyTarotReader },
+  { id: "stories", name: "Ghost Stories", icon: Ghost, component: GhostStoriesArchive },
+  { id: "investigator", name: "Paranormal Investigator", icon: Radar, component: ParanormalInvestigator },
+  { id: "curse", name: "Curse Generator", icon: Skull, component: CurseGenerator },
+]
+
+export default function HalloweenSpooktacular() {
+  const [activeFeature, setActiveFeature] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-orange-900 text-orange-100 p-4 flex flex-col">
@@ -62,7 +69,7 @@ export function HalloweenSpooktacularComponent() {
             >
               <Card className="bg-orange-950 border-orange-600 h-full">
                 <CardContent className="p-6">
-                  {features.find(f => f.id === activeFeature)?.component()}
+                  {features.find(f => f.id === activeFeature)?.component({})}
                 </CardContent>
               </Card>
             </motion.div>

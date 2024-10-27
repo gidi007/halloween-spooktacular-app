@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Wand2 } from "lucide-react"
@@ -16,6 +16,19 @@ const curseTemplates = [
   "Let your {possession} bring you nothing but {emotion} for all eternity!",
 ]
 
+const curseWords = {
+  object: ["socks", "coffee", "phone", "keys", "hair"],
+  adjective: ["damp", "itchy", "loud", "sparkly", "invisible"],
+  action: ["sneeze", "laugh", "blink", "hiccup", "yawn"],
+  consequence: ["a cat will meow", "glitter will appear", "your shoes will squeak", "time will slow down", "your hair will change color"],
+  bodyPart: ["nose", "elbow", "knee", "ear", "pinky finger"],
+  verb: ["twitch", "glow", "shrink", "tickle", "sing"],
+  mysticalEntity: ["the Great Pumpkin", "the Ghost of Wi-Fi Past", "the Sock-Eating Dryer Monster", "the Caffeine Fairy", "the Eternal Buffering Wheel"],
+  adverb: ["awkwardly", "majestically", "sneakily", "dramatically", "unnecessarily"],
+  possession: ["favorite mug", "lucky charm", "beloved pet", "prized collection", "secret stash"],
+  emotion: ["mild inconvenience", "slight annoyance", "unexpected giggles", "random dance urges", "spontaneous pun outbursts"],
+}
+
 export function CurseGenerator() {
   const [name, setName] = useState("")
   const [curse, setCurse] = useState("")
@@ -24,17 +37,10 @@ export function CurseGenerator() {
     if (!name) return
 
     const template = curseTemplates[Math.floor(Math.random() * curseTemplates.length)]
-    const filledCurse = template
-      .replace("{object}", ["socks", "coffee", "phone", "keys", "hair"][Math.floor(Math.random() * 5)])
-      .replace("{adjective}", ["damp", "itchy", "loud", "sparkly", "invisible"][Math.floor(Math.random() * 5)])
-      .replace("{action}", ["sneeze", "laugh", "blink", "hiccup", "yawn"][Math.floor(Math.random() * 5)])
-      .replace("{consequence}", ["a cat will meow", "glitter will appear", "your shoes will squeak", "time will slow down", "your hair will change color"][Math.floor(Math.random() * 5)])
-      .replace("{bodyPart}", ["nose", "elbow", "knee", "ear", "pinky finger"][Math.floor(Math.random() * 5)])
-      .replace("{verb}", ["twitch", "glow", "shrink", "tickle", "sing"][Math.floor(Math.random() * 5)])
-      .replace("{mysticalEntity}", ["the Great Pumpkin", "the Ghost of Wi-Fi Past", "the Sock-Eating Dryer Monster", "the Caffeine Fairy", "the Eternal Buffering Wheel"][Math.floor(Math.random() * 5)])
-      .replace("{adverb}", ["awkwardly", "majestically", "sneakily", "dramatically", "unnecessarily"][Math.floor(Math.random() * 5)])
-      .replace("{possession}", ["favorite mug", "lucky charm", "beloved pet", "prized collection", "secret stash"][Math.floor(Math.random() * 5)])
-      .replace("{emotion}", ["mild inconvenience", "slight annoyance", "unexpected giggles", "random dance urges", "spontaneous pun outbursts"][Math.floor(Math.random() * 5)])
+    const filledCurse = template.replace(/{(\w+)}/g, (_, key) => {
+      const words = curseWords[key as keyof typeof curseWords]
+      return words[Math.floor(Math.random() * words.length)]
+    })
 
     setCurse(`${name}, ${filledCurse}`)
   }
@@ -63,7 +69,7 @@ export function CurseGenerator() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 300, damping: 20 }}
             className="p-4 bg-orange-800 rounded-lg"
           >
             <p className="text-lg font-semibold">{curse}</p>

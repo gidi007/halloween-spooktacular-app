@@ -9,7 +9,24 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Flame, MessageSquare, Plus } from "lucide-react"
 
-const initialStories = [
+interface Story {
+  id: number
+  title: string
+  content: string
+  author: string
+  likes: number
+  comments: number
+  category: string
+}
+
+interface HauntedPlace {
+  name: string
+  location: string
+  description: string
+  imageUrl: string
+}
+
+const initialStories: Story[] = [
   {
     id: 1,
     title: "The Haunted Mansion",
@@ -30,7 +47,7 @@ const initialStories = [
   },
 ]
 
-const hauntedPlaces = [
+const hauntedPlaces: HauntedPlace[] = [
   {
     name: "Bran Castle",
     location: "Transylvania, Romania",
@@ -46,8 +63,8 @@ const hauntedPlaces = [
 ]
 
 export function GhostStoriesArchive() {
-  const [stories, setStories] = useState(initialStories)
-  const [newStory, setNewStory] = useState({ title: "", content: "", category: "" })
+  const [stories, setStories] = useState<Story[]>(initialStories)
+  const [newStory, setNewStory] = useState<Omit<Story, 'id' | 'likes' | 'comments' | 'author'>>({ title: "", content: "", category: "" })
   const [activeTab, setActiveTab] = useState("stories")
 
   const addStory = () => {

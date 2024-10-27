@@ -6,21 +6,30 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search, ArrowRight } from "lucide-react"
 
-const hauntedLocations = [
+interface HauntedLocation {
+  name: string
+  description: string
+}
+
+const hauntedLocations: HauntedLocation[] = [
   { name: "Abandoned Asylum", description: "A decrepit mental hospital with a dark history." },
   { name: "Ghostly Lighthouse", description: "An old lighthouse where the keeper's spirit still resides." },
   { name: "Cursed Cemetery", description: "An ancient burial ground where the dead don't rest peacefully." },
 ]
 
 export function ParanormalInvestigator() {
-  const [currentLocation, setCurrentLocation] = useState(hauntedLocations[0])
-  const [evidence, setEvidence] = useState([])
-  const canvasRef = useRef(null)
+  const [currentLocation, setCurrentLocation] = useState<HauntedLocation>(hauntedLocations[0])
+  const [evidence, setEvidence] = useState<string[]>([])
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
+    if (!canvas) return
+
     const ctx = canvas.getContext("2d")
-    let animationFrameId
+    if (!ctx) return
+
+    let animationFrameId: number
 
     const render = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)"
@@ -85,7 +94,13 @@ export function ParanormalInvestigator() {
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  transition={{ 
+                    duration: 0.3,
+                    delay: index * 0.1,
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                  }}
                 >
                   {item}
                 </motion.li>
