@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { SpookyTarotReader } from "./spooky-tarot-reader"
 import { GhostStoriesArchive } from "./Ghost-Stories-Archive"
-import { ParanormalInvestigator } from "./paranormal-investigator"
-import { CurseGenerator } from "./curse-generator"
+import { ParanormalInvestigator } from "./Paranormal-Investigator"
+import { CurseGenerator } from "./Curse-Generator"
 import { Ghost, Cards, Radar, Skull } from "lucide-react"
 
 export function HalloweenSpooktacularComponent() {
