@@ -1,4 +1,4 @@
-import { HalloweenSpooktacularComponent } from "@/components/halloween-spooktacular"
+import { HalloweenSpooktacularComponent } from "@/components/Halloween-Spooktacular"
 
 export default function Page() {
   return <HalloweenSpooktacularComponent />
